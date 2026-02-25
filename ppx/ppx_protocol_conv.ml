@@ -293,7 +293,7 @@ and serialize_expr_of_tdecl t ~loc tdecl =
         ) constrs
       |> List.unzip
     in
-    pexp_let ~loc Nonrecursive bindings @@ pexp_function_cases ~loc cases
+    pexp_let ~loc Nonrecursive bindings @@ pexp_function ~loc cases
 
   | Ptype_record labels ->
     let spec, patt, args = serialize_record t ~loc labels in
@@ -343,7 +343,7 @@ and serialize_expr_of_type_descr t ~loc = function
         ) rows
       |> List.unzip
     in
-    pexp_let ~loc Nonrecursive bindings @@ pexp_function_cases ~loc cases
+    pexp_let ~loc Nonrecursive bindings @@ pexp_function ~loc cases
   | Ptyp_var core_type ->
     pexp_ident ~loc { loc; txt = Lident ( sprintf "__param_to_%s" core_type) }
   | Ptyp_arrow _ -> raise_errorf ~loc "Functions not supported"
@@ -353,7 +353,6 @@ and serialize_expr_of_type_descr t ~loc = function
   | Ptyp_class _
   | Ptyp_alias _
   | Ptyp_package _
-  | Ptyp_open _
   | Ptyp_extension _ -> raise_errorf ~loc "Unsupported type descr"
 
 
@@ -537,8 +536,7 @@ and deserialize_expr_of_type_descr t ~loc = function
   | Ptyp_class _
   | Ptyp_alias _
   | Ptyp_package _
-  | Ptyp_extension _
-  | Ptyp_open _ -> raise_errorf ~loc "Unsupported type descr"
+  | Ptyp_extension _ -> raise_errorf ~loc "Unsupported type descr"
 
 let serialize_function_name ~loc ~driver name =
   let prefix = match name.txt with
@@ -590,7 +588,6 @@ let name_of_core_type ~prefix = function
   | { ptyp_desc = Ptyp_poly (_, _); _} -> failwith "Ptyp_poly "
   | { ptyp_desc = Ptyp_package _; _} -> failwith "Ptyp_package "
   | { ptyp_desc = Ptyp_extension _; _} -> failwith "Ptyp_extension "
-  | { ptyp_desc = Ptyp_open _; _} -> failwith "Ptyp_open "
 
 
 let rec is_recursive_ct types = function
@@ -612,8 +609,7 @@ let rec is_recursive_ct types = function
                   | Ptyp_object _
                   | Ptyp_class _
                   | Ptyp_package _
-                  | Ptyp_extension _
-                  | Ptyp_open _); _ } -> false
+                  | Ptyp_extension _ ); _ } -> false
 
 
 let is_recursive types = function

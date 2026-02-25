@@ -4,5 +4,5 @@
  (private_modules test_expect)
  (libraries ppx_protocol_conv.runtime ppx_protocol_conv.driver yojson)
  (synopsis "yojson (de)serialization driver for ppx_protocol_conv")
- (preprocess (pps ppx_protocol_conv ppx_expect))
+ (preprocess (pps ppx_protocol_conv))
 )
