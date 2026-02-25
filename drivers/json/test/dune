@@ -1,7 +1,7 @@
 (executable
  (name       unittest)
  (libraries  test ppx_protocol_conv_json)
- (preprocess (pps ppx_protocol_conv ppx_sexp_conv ppx_expect))
+ (preprocess (pps ppx_protocol_conv ppx_sexp_conv))
 )
 
 (rule
